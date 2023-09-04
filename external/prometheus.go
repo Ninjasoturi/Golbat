@@ -196,6 +196,14 @@ var (
 		[]string{"area", "type", "above30"},
 	)
 
+	BlisseyStats = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "blissey_stats",
+			Help: "Blissey stats",
+		},
+		[]string{"area", "var"},
+	)
+
 	RaidCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "raid_count",
@@ -241,7 +249,7 @@ func InitPrometheus(r *gin.Engine) {
 
 			PokemonCountNew, PokemonCountIv, PokemonCountHundo, PokemonCountNundo,
 
-			VerifiedPokemonTTL, VerifiedPokemonTTLCounter, RaidCount, FortCount, IncidentCount,
+			VerifiedPokemonTTL, VerifiedPokemonTTLCounter, BlisseyStats, RaidCount, FortCount, IncidentCount,
 		)
 	}
 }

@@ -377,6 +377,30 @@ func logPokemonStats(statsDb *sqlx.DB) {
 				NumWildEncounters:     stats.timeToEncounterCount,
 				SumSecWildToEncounter: stats.timeToEncounterSum,
 			})
+			external.BlisseyStats.WithLabelValues(area.Parent, "monsSeen").Add(float64(stats.monsSeen))
+			external.BlisseyStats.WithLabelValues(area.Parent, "monsIv").Add(float64(stats.monsIv))
+			external.BlisseyStats.WithLabelValues(area.Parent, "verifiedEnc").Add(float64(stats.verifiedEnc))
+			external.BlisseyStats.WithLabelValues(area.Parent, "verifiedReEncounter").Add(float64(stats.verifiedReEncounter))
+			external.BlisseyStats.WithLabelValues(area.Parent, "unverifiedEnc").Add(float64(stats.unverifiedEnc))
+
+			external.BlisseyStats.WithLabelValues(area.Parent, "verifiedEncSecTotal").Add(float64(stats.verifiedEncSecTotal))
+			external.BlisseyStats.WithLabelValues(area.Parent, "max5").Add(float64(stats.tthBucket[0]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "5to10").Add(float64(stats.tthBucket[1]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "10to15").Add(float64(stats.tthBucket[2]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "15to20").Add(float64(stats.tthBucket[3]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "20to25").Add(float64(stats.tthBucket[4]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "25to30").Add(float64(stats.tthBucket[5]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "30to35").Add(float64(stats.tthBucket[6]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "35to40").Add(float64(stats.tthBucket[7]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "40to45").Add(float64(stats.tthBucket[8]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "45to50").Add(float64(stats.tthBucket[9]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "50to55").Add(float64(stats.tthBucket[10]))
+			external.BlisseyStats.WithLabelValues(area.Parent, "min55").Add(float64(stats.tthBucket[11]))
+
+			external.BlisseyStats.WithLabelValues(area.Parent, "statsResetCount").Add(float64(stats.statsResetCount))
+			external.BlisseyStats.WithLabelValues(area.Parent, "verifiedReEncSecTotal").Add(float64(stats.verifiedReEncSecTotal))
+			external.BlisseyStats.WithLabelValues(area.Parent, "timeToEncounterCount").Add(float64(stats.timeToEncounterCount))
+			external.BlisseyStats.WithLabelValues(area.Parent, "timeToEncounterSum").Add(float64(stats.timeToEncounterSum))
 		}
 
 		if len(rows) > 0 {
