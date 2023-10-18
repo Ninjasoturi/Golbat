@@ -3,16 +3,19 @@ package decoder
 import (
 	"github.com/paulmach/orb/encoding/wkt"
 	"github.com/paulmach/orb/geojson"
+	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
 	"golbat/db"
 	"golbat/geo"
 	"golbat/pogo"
 	"strconv"
 	"sync"
+	"time"
 )
 
 var nestCount = make(map[string]*nestPokemonCountDetail)
 var nestCountLock = sync.Mutex{}
+var nestCountStarted = time.Now()
 
 type nestPokemonCountDetail struct {
 	count [maxPokemonNo]int
@@ -42,7 +45,7 @@ func updatePokemonNests(old *Pokemon, new *Pokemon) {
 	}
 }
 
-func logNestCount() {
+func logNestCount(statsDb *sqlx.DB) {
 	nestCountLock.Lock()
 	defer nestCountLock.Unlock()
 
@@ -61,8 +64,15 @@ func logNestCount() {
 		}
 
 		if total > 0 {
+			timeSinceStart := time.Since(nestCountStarted)
+			pokemonAvg := float64(maxPokemonCount) / timeSinceStart.Hours()
 			percentage := float64(maxPokemonCount) / float64(total) * 100
 			log.Infof("NESTS: %s: saw pokemon %d %s %d times (%d %%)", area, maxPokemonId, pogo.HoloPokemonId(maxPokemonId), maxPokemonCount, int(percentage))
+			err := db.SaveNest(statsDb, area, maxPokemonId, maxPokemonCount, pokemonAvg, percentage)
+			if err != nil {
+				log.Errorf("Save Nests returns error = %s", err)
+				return
+			}
 		}
 	}
 }
@@ -70,6 +80,7 @@ func logNestCount() {
 func ReloadNestsAndClearStats(dbDetails db.DbDetails) {
 	LoadNests(dbDetails)
 	nestCountLock.Lock()
+	nestCountStarted = time.Now()
 	defer nestCountLock.Unlock()
 	nestCount = make(map[string]*nestPokemonCountDetail)
 }

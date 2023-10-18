@@ -1,6 +1,9 @@
 package db
 
-import "gopkg.in/guregu/null.v4"
+import (
+	"github.com/jmoiron/sqlx"
+	"gopkg.in/guregu/null.v4"
+)
 
 type Nest struct {
 	Id      int         `db:"nest_id"`
@@ -19,4 +22,21 @@ func LoadNests(db DbDetails) ([]Nest, error) {
 	}
 
 	return fortIds, nil
+}
+
+func SaveNest(db *sqlx.DB, area string, maxPokemonId int, maxPokemonCount int, pokemonAvg float64, ratio float64) error {
+	nestData := map[string]interface{}{
+		"pokemonId":    maxPokemonId,
+		"pokemonCount": maxPokemonCount,
+		"ratio":        ratio,
+		"pokemonAvg":   pokemonAvg,
+		"nestId":       area,
+	}
+	_, err := db.NamedExec("UPDATE nests SET pokemon_id = :pokemonId, pokemon_form = 0, pokemon_count = :pokemonCount, pokemon_avg = :pokemonAvg, pokemon_ratio = :ratio, updated = unix_timestamp() WHERE nest_id = :nestId and active = 1",
+		nestData)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

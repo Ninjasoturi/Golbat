@@ -87,7 +87,7 @@ func StartStatsWriter(statsDb *sqlx.DB) {
 	go func() {
 		for {
 			<-t3.C
-			logNestCount()
+			logNestCount(statsDb)
 		}
 	}()
 }
