@@ -195,6 +195,14 @@ var (
 		[]string{"area", "type", "above30"},
 	)
 
+	BlisseyStats = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "blissey_stats",
+			Help: "Blissey stats",
+		},
+		[]string{"area", "var"},
+	)
+
 	raidCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "raid_count",
@@ -309,6 +317,10 @@ func (col *promCollector) IncPokemonCountSnundo(area string) {
 }
 */
 
+func (col *promCollector) BlisseyStats(area string, variable string, value float64) {
+	BlisseyStats.WithLabelValues(area, variable).Add(value)
+}
+
 func (col *promCollector) IncPokemonCountHundo(area string) {
 	pokemonCountHundo.WithLabelValues(area).Inc()
 }
@@ -380,7 +392,7 @@ func initPrometheus() {
 
 		pokemonCountNew, pokemonCountIv, pokemonCountHundo, pokemonCountNundo,
 
-		verifiedPokemonTTL, verifiedPokemonTTLCounter, raidCount, fortCount, incidentCount,
+		verifiedPokemonTTL, verifiedPokemonTTLCounter, BlisseyStats, raidCount, fortCount, incidentCount,
 	)
 }
 

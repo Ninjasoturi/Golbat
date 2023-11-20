@@ -35,6 +35,7 @@ func (col *noopCollector) IncPokemonCountIv(string)                             
 func (col *noopCollector) IncPokemonCountHundo(string)                           {}
 func (col *noopCollector) IncPokemonCountNundo(string)                           {}
 func (col *noopCollector) UpdateVerifiedTtl(geo.AreaName, null.String, null.Int) {}
+func (col *noopCollector) BlisseyStats(area string, variable string, value float64) {}
 func (col *noopCollector) UpdateRaidCount([]geo.AreaName, int64)                 {}
 func (col *noopCollector) UpdateFortCount([]geo.AreaName, string, string)        {}
 func (col *noopCollector) UpdateIncidentCount([]geo.AreaName)                    {}

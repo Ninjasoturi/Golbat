@@ -37,6 +37,7 @@ type StatsCollector interface {
 	IncPokemonCountHundo(area string)
 	IncPokemonCountNundo(area string)
 	UpdateVerifiedTtl(area geo.AreaName, seenType null.String, expireTimestamp null.Int)
+	BlisseyStats(area string, variable string, value float64)
 	UpdateRaidCount(areas []geo.AreaName, raidLevel int64)
 	UpdateFortCount(areas []geo.AreaName, fortType string, changeType string)
 	UpdateIncidentCount(areas []geo.AreaName)
